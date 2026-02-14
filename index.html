@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PricePulse AI</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
+        .card { background: #1e1e1e; padding: 20px; margin: 10px; border-radius: 10px; display: inline-block; width: 200px; border: 1px solid #333; }
+        input { padding: 10px; border-radius: 5px; width: 300px; }
+        button { padding: 10px 20px; background: #00ff88; border: none; cursor: pointer; font-weight: bold; }
+        .price { color: #00ff88; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <h1>PricePulse <span style="color:#00ff88">AI</span></h1>
+    <input type="text" id="item" placeholder="Product ka naam likho (e.g. Hoodie)">
+    <button onclick="search()">Compare Prices</button>
+    <div id="results" style="display: flex; justify-content: center; flex-wrap: wrap; margin-top: 20px;"></div>
+
+    <script>
+async function search() {
+    const item = document.getElementById('item').value;
+    const resDiv = document.getElementById('results');
+    resDiv.innerHTML = "🔍 AI Searching...";
+
+    
+    const response = await fetch(`http://127.0.0.1:8000/compare?item=${item}`);
+    const data = await response.json();
+
+    resDiv.innerHTML = ""; 
+    data.forEach(x => {
+        resDiv.innerHTML += `
+            <div style="background: #1e1e1e; border: 1px solid #00ff88; padding: 20px; margin: 10px; border-radius: 15px; width: 250px; box-shadow: 0 4px 15px rgba(0,255,136,0.2); color: white;">
+                <h2 style="color: #00ff88; margin-top: 0;">${x.site}</h2>
+                <p style="font-size: 24px; font-weight: bold; margin: 10px 0;">${x.price}</p>
+                <a href="${x.link}" target="_blank" style="text-decoration: none; color: black; background: #00ff88; padding: 10px 20px; border-radius: 5px; font-weight: bold; display: inline-block;">Buy Now</a>
+            </div>
+        `;
+    });
+}
+</script>
+</body>
+</html>
